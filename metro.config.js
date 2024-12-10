@@ -1,10 +1,13 @@
 const {getDefaultConfig, mergeConfig} = require('@react-native/metro-config');
+const {
+  wrapWithReanimatedMetroConfig,
+} = require('react-native-reanimated/metro-config');
 
 const defaultConfig = getDefaultConfig(__dirname);
 const {assetExts, sourceExts} = defaultConfig.resolver;
 
 /**
- * Metro configuration
+ * Metro configuration for React Native with SVG and Reanimated support
  * https://facebook.github.io/metro/docs/configuration
  *
  * @type {import('metro-config').MetroConfig}
@@ -19,4 +22,6 @@ const config = {
   },
 };
 
-module.exports = mergeConfig(defaultConfig, config);
+module.exports = wrapWithReanimatedMetroConfig(
+  mergeConfig(defaultConfig, config),
+);
