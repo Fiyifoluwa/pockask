@@ -13,9 +13,9 @@ export interface Product {
 }
 
 export interface Category {
-  id: number;
+  slug: string;
   name: string;
-  image: string;
+  url: string;
 }
 
 export interface ProductsResponse {
@@ -27,9 +27,12 @@ export interface ProductsResponse {
 
 export interface CartItem extends Product {
   quantity: number;
+  originalPrice: number;
+  discountedPrice: number;
 }
 
 export interface CartState {
   items: CartItem[];
   total: number;
+  savedAmount: number;
 }
