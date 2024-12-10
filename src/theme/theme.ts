@@ -99,6 +99,13 @@ const theme = createTheme({
       letterSpacing: 0.3,
       lineHeight: fontPixel(21),
     },
+    bold24: {
+      fontFamily: 'U8-Bold',
+      fontSize: fontPixel(24),
+      fontWeight: '800',
+      letterSpacing: 0.3,
+      lineHeight: fontPixel(26.96),
+    },
     buttonLabel: {
       fontFamily: 'U8-Regular',
       fontSize: fontPixel(15),

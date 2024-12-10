@@ -1,5 +1,5 @@
 import {createApi, fetchBaseQuery} from '@reduxjs/toolkit/query/react';
-import {Product, ProductsResponse} from '../../types/api';
+import {Category, ProductsResponse} from '../../types/api';
 
 export const api = createApi({
   reducerPath: 'api',
@@ -34,35 +34,11 @@ export const api = createApi({
       },
     }),
 
-    getProductById: builder.query<Product, number>({
-      query: id => `products/${id}`,
-      providesTags: (_result, _error, id) => [{type: 'Product', id}],
-    }),
-
-    getCategories: builder.query<string[], void>({
+    getCategories: builder.query<Category[], void>({
       query: () => 'products/categories',
       providesTags: ['Category'],
-    }),
-
-    searchProducts: builder.query<ProductsResponse, string>({
-      query: query => ({
-        url: 'products/search',
-        params: {q: query},
-      }),
-      providesTags: ['Product'],
-    }),
-
-    getProductsByCategory: builder.query<ProductsResponse, string>({
-      query: category => `products/category/${category}`,
-      providesTags: ['Product'],
     }),
   }),
 });
 
-export const {
-  useGetProductsQuery,
-  useGetProductByIdQuery,
-  useGetCategoriesQuery,
-  useSearchProductsQuery,
-  useGetProductsByCategoryQuery,
-} = api;
+export const {useGetProductsQuery, useGetCategoriesQuery} = api;
