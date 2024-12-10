@@ -2,26 +2,34 @@ import React from 'react';
 import {StyleSheet, Platform} from 'react-native';
 import FastImage from 'react-native-fast-image';
 import {Product} from '../../../types/api';
-import {useAppDispatch} from '../../../store/hooks';
-import {addToCart} from '../../../store/slices/cartSlice';
 import {Box, Icon, Image, Pressable, Row, Text} from '../../../components';
 import {heightPixel} from '../../../utils/responsiveDimensions';
-import {capitalizeFirstLetter} from '../../../utils/functions';
+import {useSavedProducts} from '../../../hooks/useSavedProducts';
+import {formatAmount} from '../../../utils/functions';
 
 interface ProductCardProps {
   product: Product;
   onPress: () => void;
+  onRemove?: (productId: number) => void;
 }
 
-export const ProductCard: React.FC<ProductCardProps> = ({product, onPress}) => {
-  const dispatch = useAppDispatch();
+export const ProductCard: React.FC<ProductCardProps> = ({
+  product,
+  onPress,
+  onRemove,
+}) => {
+  const {isProductSaved, toggleSaveProduct} = useSavedProducts();
+  const saved = isProductSaved(product.id);
 
-  const handleAddToCart = () => {
-    dispatch(addToCart(product));
+  const handleToggleSaved = () => {
+    toggleSaveProduct(product);
+    if (!saved && onRemove) {
+      onRemove(product.id);
+    }
   };
 
   return (
-    <Pressable onPress={onPress} flex={1} maxWidth={'48%'}>
+    <Pressable onPress={onPress} flex={1} maxWidth={'48%'} testID="save-button">
       <Box style={styles.cardShadow}>
         <Box
           bg="fainterGrey"
@@ -29,34 +37,67 @@ export const ProductCard: React.FC<ProductCardProps> = ({product, onPress}) => {
           borderWidth={1}
           borderRadius={'s'}
           overflow="hidden">
-          <Box
+          <Pressable
+            onPress={handleToggleSaved}
             position="absolute"
             p="s"
             bg="transparentBlack"
             borderBottomLeftRadius="s"
             zIndex={20}
             alignSelf="flex-end">
-            <Icon name="Plus" size="ll" />
-          </Box>
+            {saved ? (
+              <Icon
+                name="HeartFilled"
+                size="m"
+                color={'pink'}
+                testID="heart-filled-icon"
+              />
+            ) : (
+              <Icon
+                name="Heart"
+                size="m"
+                color="black"
+                testID="heart-outline-icon"
+              />
+            )}
+          </Pressable>
           <Box>
             <Image
               source={{uri: product.thumbnail}}
               style={styles.image}
-              resizeMode={FastImage.resizeMode.contain}
+              resizeMode={FastImage.resizeMode.cover}
             />
+            {product.discountPercentage > 0 && (
+              <Box
+                bg="transparentPrimary"
+                px="xs"
+                py="xxs"
+                position="absolute"
+                bottom={heightPixel(8)}>
+                <Text variant="regular10" color="primary">
+                  -{product.discountPercentage}%
+                </Text>
+              </Box>
+            )}
           </Box>
           <Box padding="s" bg="white">
             <Text variant="regular14" numberOfLines={1}>
               {product.title}
             </Text>
-            <Row centerAlign spaceBetween marginTop="s">
-              <Box>
+            <Row spaceBetween marginTop="s" alignItems="flex-end">
+              <Row gap="xs" centerAlign>
+                <Icon
+                  name="Star"
+                  size="sm"
+                  style={styles.iconStyle}
+                  color="placeholderTextColor"
+                />
                 <Text variant="regular10" color="placeholderTextColor">
                   {product.rating}
                 </Text>
-              </Box>
-              <Text variant="bold16" color="primary">
-                ${product.price}
+              </Row>
+              <Text variant="bold14" color="primary">
+                {formatAmount(product.price)}
               </Text>
             </Row>
           </Box>
@@ -73,7 +114,6 @@ const styles = StyleSheet.create({
   },
   cardShadow: {
     borderRadius: 8,
-    // backgroundColor: 'transparent',
     ...Platform.select({
       ios: {
         shadowColor: '#000',
@@ -90,4 +130,5 @@ const styles = StyleSheet.create({
       },
     }),
   },
+  iconStyle: {marginTop: -1.5},
 });
