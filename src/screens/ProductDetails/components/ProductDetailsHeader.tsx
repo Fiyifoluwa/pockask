@@ -55,6 +55,7 @@ const ProductDetailsHeader = () => {
                   variant="regular10"
                   color="white"
                   textAlign="center"
+                  allowFontScaling={false}
                   style={{lineHeight: heightPixel(20)}}>
                   {items.length > 9 ? '9+' : items.length}
                 </Text>

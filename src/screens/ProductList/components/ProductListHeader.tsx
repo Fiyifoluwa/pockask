@@ -6,6 +6,7 @@ import {
   CustomTextInput,
   Icon,
   Pressable,
+  Touchable,
   Row,
   Text,
 } from '../../../components';
@@ -128,6 +129,7 @@ export const ProductListHeader = forwardRef<
                       variant="regular10"
                       color="primary"
                       textAlign="center"
+                      allowFontScaling={false}
                       style={{lineHeight: heightPixel(20)}}>
                       {items.length > 9 ? '9+' : items.length}
                     </Text>
@@ -167,7 +169,10 @@ export const ProductListHeader = forwardRef<
             </Box>
 
             <Row gap="s" mt="s">
-              <Pressable onPress={onSort} style={styles.buttonWrapper}>
+              <Touchable
+                onPress={onSort}
+                style={styles.buttonWrapper}
+                activeOpacity={0.8}>
                 <Row centerAlign style={styles.button}>
                   <Icon name="Sort" size="l" color="black" />
                   <Text
@@ -178,9 +183,10 @@ export const ProductListHeader = forwardRef<
                     Sort
                   </Text>
                 </Row>
-              </Pressable>
+              </Touchable>
 
-              <Pressable
+              <Touchable
+                activeOpacity={0.8}
                 onPress={onFilter}
                 disabled={filterDisabled}
                 style={styles.buttonWrapper}>
@@ -194,7 +200,7 @@ export const ProductListHeader = forwardRef<
                     Filter
                   </Text>
                 </Row>
-              </Pressable>
+              </Touchable>
             </Row>
           </AnimatedBox>
         )}

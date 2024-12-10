@@ -1,6 +1,10 @@
 import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
-import {createStackNavigator, TransitionPresets} from '@react-navigation/stack';
+import {
+  CardStyleInterpolators,
+  createStackNavigator,
+  TransitionPresets,
+} from '@react-navigation/stack';
 import {AppStackParamList} from './types';
 import {navigationRef} from '../components/Header';
 import {ProductList} from '../screens/ProductList';
@@ -19,7 +23,13 @@ export const modalOptions = {
 const Navigation = () => {
   return (
     <NavigationContainer ref={navigationRef}>
-      <Stack.Navigator screenOptions={{headerShown: false}}>
+      <Stack.Navigator
+        screenOptions={() => {
+          return {
+            cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+            headerShown: false,
+          };
+        }}>
         <Stack.Screen name="ProductList" component={ProductList} />
         <Stack.Screen name="ProductDetails" component={ProductDetails} />
         <Stack.Screen name="Cart" component={Cart} />

@@ -1,6 +1,9 @@
 import {createBox} from '@shopify/restyle';
 import type React from 'react';
-import {Pressable as NSPressable} from 'react-native';
+import {
+  Pressable as NSPressable,
+  TouchableOpacity as RNTouchableOpacity,
+} from 'react-native';
 
 import {type Theme} from '../../theme';
 
@@ -10,10 +13,17 @@ const getPressable = () =>
     React.ComponentProps<typeof NSPressable> & {children?: React.ReactNode}
   >(NSPressable);
 
+const getTouchable = () =>
+  createBox<
+    Theme,
+    React.ComponentProps<typeof RNTouchableOpacity> & {
+      children?: React.ReactNode;
+    }
+  >(RNTouchableOpacity);
+
 export type PressableProps = React.ComponentProps<
   ReturnType<typeof getPressable>
 >;
 
-const Pressable = getPressable();
-
-export default Pressable;
+export const Pressable = getPressable();
+export const Touchable = getTouchable();

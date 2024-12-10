@@ -172,6 +172,7 @@ export const SavedItems: React.FC<SavedItemsScreenProps> = ({navigation}) => {
           variant="regular10"
           color="primary"
           textAlign="center"
+          allowFontScaling={false}
           style={{lineHeight: heightPixel(20)}}>
           {cartItems.length > 9 ? '9+' : cartItems.length}
         </Text>

@@ -2,7 +2,7 @@ import Button from './Button';
 import LayoutContainer from './LayoutContainer';
 import Box from './Box';
 import Text from './Text';
-import Pressable from './Pressable';
+import {Pressable, Touchable} from './Pressable';
 import Icon from './Icon';
 import {CustomTextInput} from './Input';
 import Image from './Image';
@@ -18,4 +18,5 @@ export {
   CustomTextInput,
   Image,
   Row,
+  Touchable,
 };

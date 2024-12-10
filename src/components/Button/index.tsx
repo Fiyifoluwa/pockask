@@ -13,9 +13,9 @@ import {ActivityIndicator, Dimensions} from 'react-native';
 
 import {type Theme} from '../../theme';
 import Box from '../Box';
-import Pressable, {type PressableProps} from '../Pressable';
 import Text, {type TextProps} from '../Text';
 import {fontPixel, heightPixel} from '../../utils/responsiveDimensions';
+import {PressableProps, Touchable} from '../Pressable';
 
 const {width} = Dimensions.get('window');
 
@@ -73,7 +73,8 @@ const Button = ({
   const mergedLabelProps = {...defaultLabelProps, ...labelProps};
 
   return (
-    <Pressable
+    <Touchable
+      activeOpacity={0.8}
       {...props}
       disabled={disabled}
       opacity={disabled ? 0.75 : 1}
@@ -92,7 +93,7 @@ const Button = ({
         )}
         {Boolean(rightIcon) && rightIcon}
       </Box>
-    </Pressable>
+    </Touchable>
   );
 };
 

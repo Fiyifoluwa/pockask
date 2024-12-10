@@ -1,14 +1,15 @@
 import React from 'react';
 import {StyleSheet, Platform} from 'react-native';
 import FastImage from 'react-native-fast-image';
-import {Product} from '../../../types/api';
 import {Box, Icon, Image, Pressable, Row, Text} from '../../../components';
 import {heightPixel} from '../../../utils/responsiveDimensions';
 import {useSavedProducts} from '../../../hooks/useSavedProducts';
 import {formatAmount} from '../../../utils/functions';
+import {ProcessedProduct} from '../../../hooks/useProducts';
+import {Palette} from '../../../theme/palette';
 
 interface ProductCardProps {
-  product: Product;
+  product: ProcessedProduct;
   onPress: () => void;
   onRemove?: (productId: number) => void;
 }
@@ -86,19 +87,22 @@ export const ProductCard: React.FC<ProductCardProps> = ({
             </Text>
             <Row spaceBetween marginTop="s" alignItems="flex-end">
               <Row gap="xs" centerAlign>
-                <Icon
-                  name="Star"
-                  size="sm"
-                  style={styles.iconStyle}
-                  color="placeholderTextColor"
-                />
+                <Icon name="Star" size="sm" style={styles.iconStyle} />
                 <Text variant="regular10" color="placeholderTextColor">
                   {product.rating}
                 </Text>
               </Row>
-              <Text variant="bold14" color="primary">
-                {formatAmount(product.price)}
-              </Text>
+              <Box alignItems="flex-end">
+                <Text
+                  variant="regular12"
+                  color="placeholderTextColor"
+                  textDecorationLine="line-through">
+                  {formatAmount(product.originalPrice)}
+                </Text>
+                <Text variant="bold14" color="primary">
+                  {formatAmount(product.discountedPrice)}
+                </Text>
+              </Box>
             </Row>
           </Box>
         </Box>
@@ -130,5 +134,5 @@ const styles = StyleSheet.create({
       },
     }),
   },
-  iconStyle: {marginTop: -1.5},
+  iconStyle: {marginTop: -1.5, color: Palette.placeholderTextColor},
 });

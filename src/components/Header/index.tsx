@@ -1,6 +1,5 @@
 import React, {createRef, RefObject} from 'react';
 
-import Pressable from '../Pressable';
 import Text from '../Text';
 import {type NavigationContainerRef} from '@react-navigation/native';
 import {AppStackParamList} from '../../navigation/types';
@@ -8,6 +7,7 @@ import Box from '../Box';
 import Row from '../Row';
 import Icon from '../Icon';
 import {heightPixel} from '../../utils/responsiveDimensions';
+import {Pressable} from '../Pressable';
 // import type {SvgIconPackTypeExtended} from '@/assets/icons/svgIconPack';
 
 export const navigationRef: RefObject<

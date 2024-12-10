@@ -1,10 +1,11 @@
 /* eslint-disable react/no-unstable-nested-components */
-import React, {useCallback, useEffect, useMemo, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {
   FlatList,
   ActivityIndicator,
   ListRenderItem,
   StyleSheet,
+  FlatListProps,
 } from 'react-native';
 import {
   useGetCategoriesQuery,
@@ -28,7 +29,7 @@ import {ProcessedProduct, useProductProcessing} from '../../hooks/useProducts';
 import {performanceUtils} from '../../utils/performance';
 
 const AnimatedFlatList =
-  Animated.createAnimatedComponent<typeof FlatList>(FlatList);
+  Animated.createAnimatedComponent<FlatListProps<ProcessedProduct>>(FlatList);
 
 export interface SortOption {
   label: string;

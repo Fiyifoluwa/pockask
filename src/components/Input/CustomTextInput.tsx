@@ -5,7 +5,7 @@ import {useTheme} from '../../theme';
 import {heightPixel} from '../../utils/responsiveDimensions';
 import Box from '../Box';
 import Text from '../Text';
-import Pressable from '../Pressable';
+import {Pressable} from '../Pressable';
 
 interface CustomTextInputProps extends InputProps {
   required?: boolean;

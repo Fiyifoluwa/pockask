@@ -2,13 +2,20 @@ import React, {useState} from 'react';
 import {Product} from '../types/api';
 import {performanceUtils} from '../utils/performance';
 import FastImage from 'react-native-fast-image';
-import {formatAmount} from '../utils/functions';
 
 export interface ProcessedProduct extends Product {
-  formattedPrice: string;
-  formattedDiscount: string;
-  imagePreloaded?: boolean;
+  discountedPrice: number;
+  originalPrice: number;
+  imagePreloaded: boolean;
 }
+
+const calculateDiscountedPrice = (
+  price: number,
+  discountPercentage: number = 0,
+): number => {
+  const discount = price * (discountPercentage / 100);
+  return price - discount;
+};
 
 export const useProductProcessing = (products: Product[] | undefined) => {
   const [processedProducts, setProcessedProducts] = useState<
@@ -32,13 +39,16 @@ export const useProductProcessing = (products: Product[] | undefined) => {
                 await FastImage.preload([{uri: product.thumbnail}]);
               }
 
+              const discountedPrice = calculateDiscountedPrice(
+                product.price,
+                product.discountPercentage,
+              );
+
               return {
                 ...product,
-                formattedPrice: formatAmount(product.price),
-                formattedDiscount: `${product.discountPercentage.toFixed(
-                  0,
-                )}% OFF`,
+                discountedPrice,
                 imagePreloaded: true,
+                originalPrice: product.price,
               };
             },
             5,

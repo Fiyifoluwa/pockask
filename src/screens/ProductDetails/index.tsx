@@ -27,7 +27,11 @@ export const ProductDetails: React.FC<ProductDetailsScreenProps> = ({
         <Box flex={1}>
           <ImageGallery thumbnail={product.thumbnail} images={product.images} />
 
-          <Box padding="m" bg="transparentBlack">
+          <Box
+            padding="m"
+            bg="white"
+            borderTopColor="fainterGrey"
+            borderTopWidth={1}>
             <ProductInfo product={product} />
           </Box>
         </Box>
@@ -38,6 +42,7 @@ export const ProductDetails: React.FC<ProductDetailsScreenProps> = ({
         onPress={handleAddToCart}
         marginHorizontal="l"
         backgroundColor="black"
+        disabled={product.stock === 0}
       />
     </LayoutContainer>
   );

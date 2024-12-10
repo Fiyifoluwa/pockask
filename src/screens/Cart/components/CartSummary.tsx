@@ -20,8 +20,8 @@ export const CartSummary: React.FC<CartSummaryProps> = ({
 }) => (
   <Box
     padding="m"
+    pb="none"
     backgroundColor="background"
-    elevation={4}
     borderTopWidth={1}
     borderTopColor="segmentBorderColor">
     <Row spaceBetween marginBottom="s">
