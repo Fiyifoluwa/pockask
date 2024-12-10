@@ -17,12 +17,12 @@ export const navigationRef: RefObject<
 
 const Header = ({
   headerText,
-  subHeader,
   showBackButton = true,
+  rightHeaderComponent,
 }: {
   headerText: string;
-  subHeader?: string;
   showBackButton?: boolean;
+  rightHeaderComponent?: React.ReactNode;
 }) => {
   const goBack = () => {
     navigationRef.current?.goBack();
@@ -44,29 +44,26 @@ const Header = ({
                 alignItems="center"
                 justifyContent="center"
                 borderRadius="xxxl">
-                <Icon name={'Close'} size="m" />
+                <Icon name={'Back'} size="m" color="black" />
               </Pressable>
             )}
+          </Box>
+
+          <Box>
+            <Text color="black" variant="bold16">
+              {headerText}
+            </Text>
           </Box>
 
           <Box
             alignItems="center"
             flexDirection="row"
             justifyContent="flex-end"
-            width="30%"
-          />
+            width="30%">
+            {rightHeaderComponent}
+          </Box>
         </Row>
       )}
-      <Box>
-        <Text color="primary" variant="headerText">
-          {headerText.toUpperCase()}
-        </Text>
-        {subHeader && (
-          <Text color="greyBlack" variant="subHeaderText">
-            {subHeader}
-          </Text>
-        )}
-      </Box>
     </Box>
   );
 };

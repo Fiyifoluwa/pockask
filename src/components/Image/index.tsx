@@ -74,7 +74,16 @@ const Image: React.FC<Props> = ({
           alignItems="center"
           backgroundColor="background"
           opacity={0.7}>
-          <ActivityIndicator />
+          {!fallbackSource ? (
+            <ActivityIndicator />
+          ) : (
+            <FastImage
+              source={fallbackSource}
+              style={style}
+              resizeMode={resizeMode}
+              {...props}
+            />
+          )}
         </Box>
       )}
     </Box>

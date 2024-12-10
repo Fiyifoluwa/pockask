@@ -1,12 +1,5 @@
 import React, {useRef} from 'react';
-import {
-  ViewStyle,
-  Platform,
-  TextStyle,
-  TextInput,
-  StyleSheet,
-} from 'react-native';
-import KeyboardManager from 'react-native-keyboard-manager';
+import {TextInput, StyleSheet} from 'react-native';
 import {InputProps} from './Input.props';
 import {useTheme} from '../../theme';
 import {heightPixel} from '../../utils/responsiveDimensions';
@@ -18,24 +11,6 @@ interface CustomTextInputProps extends InputProps {
   required?: boolean;
   ignoreKeyboardSettings?: boolean;
 }
-
-const configureIosKeyboard = () => {
-  if (Platform.OS !== 'ios') {
-    return;
-  }
-
-  KeyboardManager.setEnable(true);
-  KeyboardManager.setKeyboardDistanceFromTextField(heightPixel(50));
-  KeyboardManager.setLayoutIfNeededOnUpdate(true);
-  KeyboardManager.setEnableAutoToolbar(true);
-  KeyboardManager.setToolbarDoneBarButtonItemText('Done');
-  KeyboardManager.setToolbarManageBehaviourBy('subviews');
-  KeyboardManager.setToolbarPreviousNextButtonEnable(true);
-  KeyboardManager.setShouldShowToolbarPlaceholder(true);
-  KeyboardManager.setOverrideKeyboardAppearance(false);
-  KeyboardManager.setShouldResignOnTouchOutside(true);
-  KeyboardManager.setShouldPlayInputClicks(true);
-};
 
 const CustomTextInput: React.FC<CustomTextInputProps> = ({
   value,
@@ -59,8 +34,6 @@ const CustomTextInput: React.FC<CustomTextInputProps> = ({
 }) => {
   const {colors} = useTheme();
   const textInputRef = useRef<TextInput>(null);
-
-  configureIosKeyboard();
 
   const styles = StyleSheet.create({
     input: {

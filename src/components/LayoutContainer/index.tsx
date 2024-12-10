@@ -44,7 +44,6 @@ interface LayoutType {
   showBottomInset?: boolean;
   hideRightButton?: boolean;
   rightHeaderComponent?: ReactNode;
-  subHeader?: string;
   disabled?: boolean;
   bottomButtonContainerProps?: PressableProps;
   showBackButton?: boolean;
@@ -69,10 +68,10 @@ const LayoutContainer = (Props: LayoutType) => {
     bottomButtonLabelTextColor = 'bottomButtonLabelTextColor',
     headerText = '',
     showBottomInset = true,
-    subHeader,
     bottomButtonContainerProps,
     disabled,
     showBackButton,
+    rightHeaderComponent,
   } = Props;
 
   return (
@@ -83,8 +82,8 @@ const LayoutContainer = (Props: LayoutType) => {
         {Boolean(headerText) && (
           <Header
             headerText={headerText}
-            subHeader={subHeader}
             showBackButton={showBackButton}
+            rightHeaderComponent={rightHeaderComponent}
           />
         )}
         <Box flex={1} position="relative">
