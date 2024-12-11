@@ -42,7 +42,7 @@ yarn android
 
    - Optimized rendering with `removeClippedSubviews`
    - Configured batch rendering parameters (`maxToRenderPerBatch`, `windowSize`)
-   - Used `useMemo` and `useCallback` for component memoization
+   - Used `memo` and `useCallback` for component memoization
 
 ### Data Flow
 
