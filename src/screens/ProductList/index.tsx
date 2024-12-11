@@ -6,6 +6,8 @@ import {
   ListRenderItem,
   StyleSheet,
   FlatListProps,
+  Platform,
+  UIManager,
 } from 'react-native';
 import {
   useGetCategoriesQuery,
@@ -27,6 +29,13 @@ import Animated, {
 import {heightPixel} from '../../utils/responsiveDimensions';
 import {ProcessedProduct, useProductProcessing} from '../../hooks/useProducts';
 import {performanceUtils} from '../../utils/performance';
+
+if (
+  Platform.OS === 'android' &&
+  UIManager.setLayoutAnimationEnabledExperimental
+) {
+  UIManager.setLayoutAnimationEnabledExperimental(true);
+}
 
 const AnimatedFlatList =
   Animated.createAnimatedComponent<FlatListProps<ProcessedProduct>>(FlatList);
@@ -283,6 +292,11 @@ export const ProductList: React.FC<ProductListScreenProps> = ({navigation}) => {
 };
 
 const styles = StyleSheet.create({
-  flatlistContainer: {padding: 16, paddingTop: heightPixel(200)},
+  flatlistContainer: {
+    padding: 16,
+    paddingTop:
+      Platform.select({ios: heightPixel(185), android: heightPixel(195)}) ??
+      heightPixel(180),
+  },
   columnWrapper: {gap: 16, justifyContent: 'flex-start'},
 });
