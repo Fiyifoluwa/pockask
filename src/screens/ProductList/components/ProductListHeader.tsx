@@ -1,6 +1,14 @@
 import React, {forwardRef} from 'react';
-import {StyleSheet} from 'react-native';
-import Animated, {useAnimatedStyle, withSpring} from 'react-native-reanimated';
+import {StyleSheet, Platform} from 'react-native';
+import Animated, {
+  useAnimatedStyle,
+  withSpring,
+  interpolate,
+  Extrapolate,
+  SharedValue,
+  useSharedValue,
+  useDerivedValue,
+} from 'react-native-reanimated';
 import {
   Box,
   CustomTextInput,
@@ -23,12 +31,22 @@ interface ProductListHeaderProps {
   filterDisabled?: boolean;
   hidden?: boolean;
   style?: any;
-  scrollY?: Animated.SharedValue<number>;
-  lastScrollY?: Animated.SharedValue<number>;
-  isInitialRender?: Animated.SharedValue<boolean>;
+  scrollY?: SharedValue<number>;
+  lastScrollY?: SharedValue<number>;
+  isInitialRender?: SharedValue<boolean>;
 }
 
 export const AnimatedBox = Animated.createAnimatedComponent(Box);
+
+const TOP_SECTION_HEIGHT = Platform.select({ios: 70, android: 60}) ?? 70;
+const SEARCH_SECTION_HEIGHT = Platform.select({ios: 110, android: 100}) ?? 110;
+const SPRING_CONFIG = {
+  damping: Platform.select({ios: 15, android: 20}),
+  stiffness: Platform.select({ios: 100, android: 150}),
+  mass: Platform.select({ios: 0.5, android: 0.8}),
+};
+
+const SCROLL_THRESHOLD = 10;
 
 export const ProductListHeader = forwardRef<
   Animated.View,
@@ -45,63 +63,66 @@ export const ProductListHeader = forwardRef<
       style,
       scrollY,
       lastScrollY,
-      isInitialRender,
     },
     ref,
   ) => {
     const {colors} = useTheme();
     const {items} = useAppSelector(state => state.cart);
+    const headerVisible = useSharedValue(1);
 
-    const navigateToSavedItems = () => {
-      navigationRef.current.navigate('SavedItems');
-    };
-    const navigateToCart = () => {
-      navigationRef.current.navigate('Cart');
-    };
-
-    const animatedStyle = useAnimatedStyle(() => {
-      if (!scrollY || !lastScrollY) {
-        return {};
+    const visibilityFactor = useDerivedValue(() => {
+      if (!scrollY?.value || !lastScrollY?.value) {
+        return 1;
       }
 
-      const isScrollingUp = scrollY.value < lastScrollY.value;
-      const shouldShow = isInitialRender?.value || isScrollingUp;
+      const scrollDiff = scrollY.value - lastScrollY.value;
 
-      return {
-        height: withSpring(shouldShow ? 115 : 0, {
-          damping: 15,
-          stiffness: 100,
-          mass: 0.5,
-        }),
-        opacity: withSpring(shouldShow ? 1 : 0, {
-          damping: 15,
-          stiffness: 100,
-          mass: 0.5,
-        }),
-        transform: [
-          {
-            translateY: withSpring(shouldShow ? 0 : -115, {
-              damping: 15,
-              stiffness: 100,
-              mass: 0.5,
-            }),
-          },
-        ],
-      };
+      if (Math.abs(scrollDiff) > SCROLL_THRESHOLD) {
+        const isScrollingUp = scrollDiff < 0;
+        headerVisible.value = withSpring(isScrollingUp ? 1 : 0, {
+          ...SPRING_CONFIG,
+          velocity: Math.abs(scrollDiff),
+        });
+      }
+
+      return headerVisible.value;
     }, [scrollY, lastScrollY]);
 
+    const searchSectionStyle = useAnimatedStyle(() => {
+      const translateY = interpolate(
+        visibilityFactor.value,
+        [0, 1],
+        [-SEARCH_SECTION_HEIGHT, 0],
+        Extrapolate.CLAMP,
+      );
+
+      return {
+        transform: [{translateY}],
+        opacity: visibilityFactor.value,
+        height: interpolate(
+          visibilityFactor.value,
+          [0, 1],
+          [0, SEARCH_SECTION_HEIGHT],
+          Extrapolate.CLAMP,
+        ),
+        marginTop: interpolate(
+          visibilityFactor.value,
+          [0, 1],
+          [-SEARCH_SECTION_HEIGHT, 0],
+          Extrapolate.CLAMP,
+        ),
+      };
+    }, []);
+
+    const navigateToSavedItems = () =>
+      navigationRef.current.navigate('SavedItems');
+    const navigateToCart = () => navigationRef.current.navigate('Cart');
+
     return (
-      <Box
-        ref={ref}
-        bg="white"
-        style={[styles.container, style]}
-        borderBottomWidth={1}
-        borderBottomColor="fainterGrey">
-        {/* Static top section */}
-        <Box padding="m">
+      <Box ref={ref} style={[styles.container, style]} bg="background">
+        <Box height={TOP_SECTION_HEIGHT} padding="m" bg="background">
           <Row centerAlign spaceBetween>
             <Text variant="regular24">Market</Text>
-
             <Row centerAlign gap="m">
               <Pressable
                 style={styles.headerButtons}
@@ -141,24 +162,18 @@ export const ProductListHeader = forwardRef<
           </Row>
         </Box>
 
-        {/* Animated bottom section */}
         {!hidden && (
           <AnimatedBox
             px="m"
-            style={[
-              {
-                overflow: 'hidden',
-                backfaceVisibility: 'hidden',
-              },
-              animatedStyle,
-            ]}>
+            bg="background"
+            style={[styles.searchSection, searchSectionStyle]}>
             <Box>
               <CustomTextInput
                 leftComponent={<Icon name="Search" size="l" color="black" />}
                 hideLabel
                 label="Search"
                 autoCapitalize="none"
-                placeholder={'Search Market...'}
+                placeholder="Search Market..."
                 value={searchQuery}
                 onChangeText={onSearch}
                 addedContainerStyle={{
@@ -218,11 +233,11 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     zIndex: 100,
+    borderBottomWidth: 1,
+    borderBottomColor: '#f5f5f5',
   },
-  searchInput: {
-    flex: 1,
-    marginLeft: 8,
-    fontSize: 16,
+  searchSection: {
+    overflow: 'hidden',
   },
   buttonWrapper: {
     flex: 1,
