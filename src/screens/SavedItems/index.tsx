@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unstable-nested-components */
 import React, {useCallback, useMemo, useState} from 'react';
 import {
   FlatList,
@@ -56,10 +57,8 @@ export const SavedItems: React.FC<SavedItemsScreenProps> = ({navigation}) => {
   const savedItems = useAppSelector(selectSavedItems);
   const {items: cartItems} = useAppSelector(state => state.cart);
 
-  // Process saved items with performance utils
   const {processedProducts, isProcessing} = useProductProcessing(savedItems);
 
-  // Memoize handlers
   const handleSearch = useCallback((text: string) => {
     setSearchQuery(text);
   }, []);
@@ -76,7 +75,6 @@ export const SavedItems: React.FC<SavedItemsScreenProps> = ({navigation}) => {
     navigationRef.current.navigate('Cart');
   }, []);
 
-  // Process filtering and sorting after interactions
   React.useEffect(() => {
     if (!processedProducts) {
       setFilteredData([]);
@@ -130,12 +128,11 @@ export const SavedItems: React.FC<SavedItemsScreenProps> = ({navigation}) => {
         });
       },
       searchQuery ? 300 : 0,
-    ); // Add debounce for search
+    );
 
     return () => clearTimeout(filterTimeout);
   }, [processedProducts, searchQuery, currentSort]);
 
-  // Memoize rendering functions
   const renderItem = useCallback<ListRenderItem<ProcessedProduct>>(
     ({item}) => (
       <ProductCard
@@ -241,10 +238,9 @@ export const SavedItems: React.FC<SavedItemsScreenProps> = ({navigation}) => {
         numColumns={2}
         columnWrapperStyle={styles.columnWrapper}
         ItemSeparatorComponent={() => <Box height={16} />}
-        // Performance optimizations
         removeClippedSubviews={true}
         maxToRenderPerBatch={10}
-        windowSize={5}
+        windowSize={10}
         initialNumToRender={6}
         updateCellsBatchingPeriod={50}
       />
