@@ -58,7 +58,7 @@ const persistConfig = {
   key: 'root',
   storage: reduxStorage,
   version: 1,
-  whitelist: ['cart', 'saved'],
+  whitelist: ['cart', 'saved', 'api'],
 };
 
 const persistedReducer = persistReducer(persistConfig, reducers);

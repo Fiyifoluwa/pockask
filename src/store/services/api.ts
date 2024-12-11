@@ -6,6 +6,8 @@ export const api = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: 'https://dummyjson.com',
   }),
+  keepUnusedDataFor: 3600,
+  refetchOnReconnect: true,
   tagTypes: ['Product', 'Category'],
   endpoints: builder => ({
     getProducts: builder.query<
